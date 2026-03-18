@@ -1184,7 +1184,7 @@ document.getElementById("hookForm").addEventListener("submit", async function (e
     });
 
     const text = await response.text();
-    alert("Envoyé à Make ✅");
+alert(text);
     console.log(text);
   } catch (error) {
     alert("Erreur lors de l’envoi au webhook");
