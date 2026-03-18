@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HookForge AI — Fix Weak Ad Hooks Instantly</title>
+  <meta
+    name="description"
+    content="Turn weak ad hooks into scroll-stopping, high-converting hooks for TikTok, Meta Ads, and product pages."
+  />
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-soft: #0d1830;
+      --card: rgba(255,255,255,0.06);
+      --card-strong: rgba(255,255,255,0.1);
+      --border: rgba(255,255,255,0.12);
+      --text: #f4f7fb;
+      --muted: #a6b3c8;
+      --accent: #7c5cff;
+      --accent-2: #20d4ff;
+      --success: #19c37d;
+      --danger: #ff5f7a;
+      --warning: #ffb84d;
+      --shadow: 0 20px 50px rgba(0,0,0,0.35);
+      --radius: 20px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,92,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(32,212,255,0.14), transparent 24%),
+        linear-gradient(180deg, #07101d 0%, #08111f 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #dce6f6;
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 16px rgba(124,92,255,0.7);
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(8, 17, 31, 0.74);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav {
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 20px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 10px 30px rgba(124,92,255,0.35);
+      font-weight: 900;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 14px 30px rgba(124,92,255,0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 72px 0 56px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 38px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      margin: 18px 0 16px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      max-width: 800px;
+    }
+
+    .gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #c5d5ff 55%, #8fdfff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy p {
+      margin: 0 0 26px;
+      max-width: 650px;
+      font-size: clamp(17px, 2.2vw, 20px);
+      color: var(--muted);
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .micro-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: #d5def0;
+      font-size: 14px;
+    }
+
+    .micro-proof span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .micro-proof .check {
+      color: var(--success);
+      font-weight: 900;
+    }
+
+    .hero-card {
+      position: relative;
+      padding: 22px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -80px auto auto -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(124,92,255,0.35), transparent 70%);
+      pointer-events: none;
+    }
+
+    .window-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .window-bar i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: block;
+      opacity: 0.8;
+    }
+
+    .window-bar i:nth-child(1) { background: #ff5f57; }
+    .window-bar i:nth-child(2) { background: #ffbd2f; }
+    .window-bar i:nth-child(3) { background: #28c840; }
+
+    .demo-box {
+      display: grid;
+      gap: 16px;
+    }
+
+    .input-mock,
+    .result-mock,
+    .mini-card {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(5, 10, 22, 0.52);
+      padding: 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #9aa9c4;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+
+    .hook-text {
+      color: #eef3ff;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .score-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .score-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,95,122,0.14);
+      color: #ffd2da;
+      border: 1px solid rgba(255,95,122,0.28);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .score-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-bar span {
+      display: block;
+      width: 82%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+    }
+
+    .hooks-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .hooks-list div {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      color: #eaf0fb;
+      border: 1px solid rgba(255,255,255,0.07);
+      font-size: 14px;
+    }
+
+    .section {
+      padding: 44px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 28px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .pain-grid,
+    .feature-grid,
+    .steps-grid,
+    .pricing-grid,
+    .testimonial-grid,
+    .faq-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .pain-grid { grid-template-columns: repeat(3, 1fr); }
+    .feature-grid { grid-template-columns: repeat(3, 1fr); }
+    .steps-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); align-items: stretch; }
+    .testimonial-grid { grid-template-columns: repeat(3, 1fr); }
+    .faq-grid { grid-template-columns: 1fr 1fr; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 14px 0 10px;
+      font-size: 21px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      background: linear-gradient(135deg, rgba(124,92,255,0.22), rgba(32,212,255,0.18));
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .form-section {
+      padding-top: 24px;
+    }
+
+    .form-card {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      padding: 22px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow);
+    }
+
+    .form-inner {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #eaf0fb;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(6, 12, 25, 0.65);
+      color: white;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font: inherit;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: rgba(124,92,255,0.7);
+      box-shadow: 0 0 0 4px rgba(124,92,255,0.12);
+    }
+
+    .field textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-panel {
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: rgba(6, 12, 25, 0.66);
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(25,195,125,0.12);
+      color: #c8ffdf;
+      border: 1px solid rgba(25,195,125,0.25);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .result-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .result-item strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #dce7fa;
+    }
+
+    .steps-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .steps-card .num {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 32px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.08);
+    }
+
+    .pricing-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(124,92,255,0.4);
+      background: linear-gradient(180deg, rgba(124,92,255,0.14), rgba(255,255,255,0.05));
+      transform: translateY(-4px);
+    }
+
+    .tag {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(124,92,255,0.16);
+      color: #dddcff;
+      border: 1px solid rgba(124,92,255,0.35);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .price {
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin: 14px 0 6px;
+    }
+
+    .price small {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .pricing-list {
+      margin: 18px 0 22px;
+      display: grid;
+      gap: 12px;
+      color: #eaf0fb;
+      font-size: 15px;
+    }
+
+    .pricing-list div {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pricing-list span {
+      color: var(--success);
+      font-weight: 900;
+      margin-top: 1px;
+    }
+
+    .testimonial {
+      display: grid;
+      gap: 16px;
+    }
+
+    .quote {
+      font-size: 16px;
+      color: #edf3ff;
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-weight: 900;
+    }
+
+    .author-meta strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .author-meta span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .faq-item h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .final-cta {
+      padding: 28px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top left, rgba(124,92,255,0.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(32,212,255,0.18), transparent 28%),
+        rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .final-cta p {
+      margin: 0 auto 22px;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    footer {
+      padding: 34px 0 60px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .form-card {
+        grid-template-columns: 1fr;
+      }
+
+      .pain-grid,
+      .feature-grid,
+      .steps-grid,
+      .testimonial-grid,
+      .pricing-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      .hero-copy h1 {
+        font-size: 42px;
+      }
+
+      .section {
+        padding: 34px 0;
+      }
+
+      .nav-actions .btn-secondary {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="container nav">
+      <a href="#" class="logo">
+        <span class="logo-mark">H</span>
+        <span>HookForge AI</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#analyze">Analyze</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="btn btn-secondary" href="#pricing">See Pricing</a>
+        <a class="btn btn-primary" href="#analyze">Fix My Hook</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="badge">
+            <span class="dot"></span>
+            Built for Shopify brands running ads
+          </div>
+
+          <h1>
+            <span class="gradient">Your hook is killing your conversions.</span>
+            Fix it before you waste another dollar.
+          </h1>
+
+          <p>
+            HookForge AI audits weak ad hooks, explains why they fail, and rewrites
+            them into scroll-stopping hooks for TikTok, Meta Ads, and product pages.
+          </p>
+
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#analyze">Analyze My Hook</a>
+            <a class="btn btn-secondary" href="#demo">See Example</a>
+          </div>
+
+          <div class="micro-proof">
+            <span><span class="check">✓</span> Get a hook score instantly</span>
+            <span><span class="check">✓</span> Rewrite by angle and channel</span>
+            <span><span class="check">✓</span> Built for paid traffic</span>
+          </div>
+        </div>
+
+        <div class="hero-card" id="demo">
+          <div class="window-bar">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="demo-box">
+            <div class="input-mock">
+              <div class="label">Original hook</div>
+              <div class="hook-text">“Try our new collagen eye patches today.”</div>
+            </div>
+
+            <div class="result-mock">
+              <div class="score-line">
+                <strong>Hook score</strong>
+                <span class="score-badge">3.2 / 10 — weak</span>
+              </div>
+
+              <div class="score-bar"><span></span></div>
+
+              <div class="hooks-list">
+                <div>These eye bags make you look exhausted — fix them fast.</div>
+                <div>Still waking up with puffy eyes? This changes everything.</div>
+                <div>Your eye area ages first. Most people ignore this.</div>
+              </div>
+            </div>
+
+            <div class="mini-card">
+              <div class="label">Why it failed</div>
+              <div class="hook-text" style="font-weight:500; color: var(--muted);">
+                Too generic. No pain. No urgency. No curiosity. No reason to stop scrolling.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="pain-grid">
+          <div class="card">
+            <div class="icon">💸</div>
+            <h3>You pay for clicks that never happen</h3>
+            <p>
+              Weak hooks make your ad invisible before your product even gets a chance.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">📉</div>
+            <h3>Your CTR stays low</h3>
+            <p>
+              If the first line does not hit hard, everything after it is irrelevant.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">⏳</div>
+            <h3>You waste time guessing</h3>
+            <p>
+              Writing ten mediocre hooks manually is slower than fixing the real problem.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2>More than a basic AI prompt</h2>
+          <p>
+            This is not “generate me some hooks.” It is a conversion-focused system
+            built to improve the first line of your ad.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="card">
+            <div class="icon">🎯</div>
+            <h3>Score your current hook</h3>
+            <p>
+              Instantly see whether your hook is strong or silently killing performance.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">🧠</div>
+            <h3>Get a real diagnosis</h3>
+            <p>
+              Understand exactly what is missing: pain, curiosity, desire, clarity, or urgency.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">⚡</div>
+            <h3>Rewrite by angle</h3>
+            <p>
+              Generate emotional, curiosity-driven, and pain-driven hooks in seconds.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">📱</div>
+            <h3>Adapt for TikTok</h3>
+            <p>
+              Shorter, punchier, more native, more stop-scroll.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">🛒</div>
+            <h3>Built for Shopify brands</h3>
+            <p>
+              Especially useful for product ads, UGC scripts, landing pages, and paid traffic.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">📈</div>
+            <h3>Turn better hooks into better tests</h3>
+            <p>
+              Launch stronger creatives faster and stop wasting spend on weak openings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section form-section" id="analyze">
+      <div class="container">
+        <div class="section-head">
+          <h2>Analyze your hook now</h2>
+          <p>
+            Paste your current hook, product, and channel. This block is ready to connect
+            later to Make, OpenAI, or your backend.
+          </p>
+        </div>
+
+        <div class="form-card">
+          <form class="form-inner" onsubmit="event.preventDefault(); alert('Connect this form to Make or your backend next.');">
+            <div class="field">
+              <label for="hook">Your current hook</label>
+              <textarea id="hook" placeholder="Example: Try our new collagen eye patches today."></textarea>
+              <div class="helper">Paste the exact first line you use in ads or short-form videos.</div>
+            </div>
+
+            <div class="field">
+              <label for="product">Your product</label>
+              <input id="product" type="text" placeholder="Example: Collagen eye patches for puffiness and dark circles" />
+            </div>
+
+            <div class="field">
+              <label for="channel">Channel</label>
+              <select id="channel">
+                <option>TikTok Ad</option>
+                <option>Meta Ad</option>
+                <option>Product Page</option>
+                <option>UGC Script</option>
+              </select>
+            </div>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button class="btn btn-primary" type="submit">Analyze My Hook</button>
+              <a class="btn btn-secondary" href="#pricing">Unlock Unlimited</a>
+            </div>
+          </form>
+
+          <div class="result-panel">
+            <div class="result-header">
+              <strong>Example output</strong>
+              <span class="pill">Conversion-focused analysis</span>
+            </div>
+
+            <div class="result-item">
+              <strong>Score</strong>
+              3/10 — Too generic. No emotional trigger, no urgency, and no reason to stop scrolling.
+            </div>
+
+            <div class="result-item">
+              <strong>Best rewritten hook</strong>
+              “Your eye bags are making you look more tired than you are.”
+            </div>
+
+            <div class="result-item">
+              <strong>Curiosity angle</strong>
+              “Most people treat puffy eyes wrong — this is what actually helps.”
+            </div>
+
+            <div class="result-item">
+              <strong>Pain-driven angle</strong>
+              “If your under-eyes make you look exhausted, read this.”
+            </div>
+
+            <div class="result-item">
+              <strong>TikTok version</strong>
+              “POV: your under-eyes age you faster than anything else.”
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>How it works</h2>
+          <p>
+            Simple enough to use in minutes. Powerful enough to improve your next creative test.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="card steps-card">
+            <span class="num">01</span>
+            <div class="icon">✍️</div>
+            <h3>Paste your hook</h3>
+            <p>
+              Use the exact line you currently run in ads, UGC intros, or product pages.
+            </p>
+          </div>
+
+          <div class="card steps-card">
+            <span class="num">02</span>
+            <div class="icon">🔍</div>
+            <h3>Get an instant diagnosis</h3>
+            <p>
+              See why it fails and where your conversion leak starts.
+            </p>
+          </div>
+
+          <div class="card steps-card">
+            <span class="num">03</span>
+            <div class="icon">🚀</div>
+            <h3>Launch stronger variations</h3>
+            <p>
+              Test better hooks fast and improve your odds before spending more.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <h2>Simple pricing</h2>
+          <p>
+            Start free. Upgrade when you want unlimited hook analysis and rewrites.
+          </p>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="card pricing-card">
+            <h3>Free</h3>
+            <div class="price">$0 <small>/ forever</small></div>
+            <p>Perfect for testing the product and fixing a few weak hooks.</p>
+
+            <div class="pricing-list">
+              <div><span>✓</span> 3 analyses</div>
+              <div><span>✓</span> Hook score</div>
+              <div><span>✓</span> Rewritten variations</div>
+              <div><span>✓</span> TikTok + Meta output</div>
+            </div>
+
+            <a class="btn btn-secondary" href="#analyze">Start Free</a>
+          </div>
+
+          <div class="card pricing-card featured">
+            <div class="tag">Most popular</div>
+            <h3>Pro</h3>
+            <div class="price">$19 <small>/ month</small></div>
+            <p>For Shopify brands, media buyers, and creators who test regularly.</p>
+
+            <div class="pricing-list">
+              <div><span>✓</span> Unlimited analyses</div>
+              <div><span>✓</span> More hook angles</div>
+              <div><span>✓</span> Faster creative testing</div>
+              <div><span>✓</span> Better ad opening lines</div>
+            </div>
+
+            <a class="btn btn-primary" href="#">Upgrade to Pro</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>What people would say after using it</h2>
+          <p>
+            Placeholder social proof for now. You can replace this with real testimonials later.
+          </p>
+        </div>
+
+        <div class="testimonial-grid">
+          <div class="card testimonial">
+            <div class="quote">
+              “We realized our product was not the problem. Our hook was. This made that obvious in seconds.”
+            </div>
+            <div class="author">
+              <div class="avatar">A</div>
+              <div class="author-meta">
+                <strong>Amanda R.</strong>
+                <span>Shopify founder</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card testimonial">
+            <div class="quote">
+              “The biggest value was the diagnosis. It did not just rewrite. It told us why the hook was weak.”
+            </div>
+            <div class="author">
+              <div class="avatar">J</div>
+              <div class="author-meta">
+                <strong>Jason T.</strong>
+                <span>Media buyer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card testimonial">
+            <div class="quote">
+              “Way more useful than generic AI copy tools because it is focused on the first line that matters most.”
+            </div>
+            <div class="author">
+              <div class="avatar">M</div>
+              <div class="author-meta">
+                <strong>Melissa K.</strong>
+                <span>Creative strategist</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <h2>FAQ</h2>
+          <p>
+            Clear answers to the main objections before someone buys.
+          </p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="card faq-item">
+            <h3>Is this just another ChatGPT wrapper?</h3>
+            <p>
+              Not if you connect the product to a real workflow and position it around outcomes.
+              The value is not just “generate text.” It is scoring, diagnosis, channel adaptation,
+              and faster creative testing.
+            </p>
+          </div>
+
+          <div class="card faq-item">
+            <h3>Who is this for?</h3>
+            <p>
+              Shopify brands, media buyers, creators, and anyone running short-form ads who needs
+              better opening lines.
+            </p>
+          </div>
+
+          <div class="card faq-item">
+            <h3>Can I connect this to Make or OpenAI later?</h3>
+            <p>
+              Yes. The form block is ready to be connected to your automation or backend.
+            </p>
+          </div>
+
+          <div class="card faq-item">
+            <h3>Do I need to code?</h3>
+            <p>
+              Not necessarily. You can start with a static page, validate demand, then connect
+              the form to Make and OpenAI afterward.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="final-cta">
+          <h2>Stop losing money to weak hooks</h2>
+          <p>
+            Your product might be good. Your offer might be good. But if your first line is weak,
+            nobody gets far enough to care. Fix that first.
+          </p>
+          <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#analyze">Analyze My Hook</a>
+            <a class="btn btn-secondary" href="#pricing">See Pricing</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© 2026 HookForge AI. All rights reserved.</div>
+      <div>Built to improve ad hooks, not waste ad spend.</div>
+    </div>
+  </footer>
+</body>
+</html>
