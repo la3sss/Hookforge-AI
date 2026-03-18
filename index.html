@@ -162,7 +162,7 @@
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 38px;
-      align-items: center;
+      align-items: start;
     }
 
     .hero-copy h1 {
@@ -502,6 +502,10 @@
       color: #dce7fa;
     }
 
+    .loading {
+      opacity: 0.7;
+    }
+
     .steps-card {
       position: relative;
       overflow: hidden;
@@ -661,6 +665,13 @@
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      margin: 0;
+      font: inherit;
+      color: #eaf0fb;
     }
 
     @media (max-width: 1080px) {
@@ -889,8 +900,7 @@
         <div class="section-head">
           <h2>Analyze your hook now</h2>
           <p>
-            Paste your current hook, product, and channel. This block is ready to connect
-            later to Make, OpenAI, or your backend.
+            Paste your current hook, product, and channel. Get a live AI-generated analysis instantly.
           </p>
         </div>
 
@@ -918,40 +928,25 @@
             </div>
 
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <button class="btn btn-primary" type="submit">Analyze My Hook</button>
+              <button class="btn btn-primary" id="submitBtn" type="submit">Analyze My Hook</button>
               <a class="btn btn-secondary" href="#pricing">Unlock Unlimited</a>
             </div>
           </form>
 
           <div class="result-panel">
             <div class="result-header">
-              <strong>Example output</strong>
-              <span class="pill">Conversion-focused analysis</span>
+              <strong>Live output</strong>
+              <span class="pill">AI-generated analysis</span>
             </div>
 
             <div class="result-item">
-              <strong>Score</strong>
-              3/10 — Too generic. No emotional trigger, no urgency, and no reason to stop scrolling.
+              <strong>Status</strong>
+              <div id="result-status">Ready</div>
             </div>
 
             <div class="result-item">
-              <strong>Best rewritten hook</strong>
-              “Your eye bags are making you look more tired than you are.”
-            </div>
-
-            <div class="result-item">
-              <strong>Curiosity angle</strong>
-              “Most people treat puffy eyes wrong — this is what actually helps.”
-            </div>
-
-            <div class="result-item">
-              <strong>Pain-driven angle</strong>
-              “If your under-eyes make you look exhausted, read this.”
-            </div>
-
-            <div class="result-item">
-              <strong>TikTok version</strong>
-              “POV: your under-eyes age you faster than anything else.”
+              <strong>Full analysis</strong>
+              <pre id="result-full">Submit a hook to generate analysis.</pre>
             </div>
           </div>
         </div>
@@ -1047,7 +1042,7 @@
         <div class="section-head">
           <h2>What people would say after using it</h2>
           <p>
-            Placeholder social proof for now. You can replace this with real testimonials later.
+            Replace these with real testimonials after your first users.
           </p>
         </div>
 
@@ -1124,15 +1119,14 @@
           <div class="card faq-item">
             <h3>Can I connect this to Make or OpenAI later?</h3>
             <p>
-              Yes. The form block is ready to be connected to your automation or backend.
+              Yes. This version is already connected to Make and OpenAI.
             </p>
           </div>
 
           <div class="card faq-item">
             <h3>Do I need to code?</h3>
             <p>
-              Not necessarily. You can start with a static page, validate demand, then connect
-              the form to Make and OpenAI afterward.
+              Not necessarily. You can validate with a simple front-end and automation first, then improve the UX later.
             </p>
           </div>
         </div>
@@ -1162,35 +1156,58 @@
       <div>Built to improve ad hooks, not waste ad spend.</div>
     </div>
   </footer>
+
   <script>
-document.getElementById("hookForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+    document.getElementById("hookForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
 
-  const hook = document.getElementById("hook").value;
-  const product = document.getElementById("product").value;
-  const channel = document.getElementById("channel").value;
+      const hook = document.getElementById("hook").value.trim();
+      const product = document.getElementById("product").value.trim();
+      const channel = document.getElementById("channel").value;
+      const statusEl = document.getElementById("result-status");
+      const fullEl = document.getElementById("result-full");
+      const submitBtn = document.getElementById("submitBtn");
 
-  try {
-    const response = await fetch("https://hook.eu1.make.com/g7fv7kdxcvloc1l813v42vkzkec9cm5c", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        hook: hook,
-        product: product,
-        channel: channel
-      })
+      if (!hook || !product) {
+        statusEl.textContent = "Missing input";
+        fullEl.textContent = "Please enter both your hook and your product.";
+        return;
+      }
+
+      statusEl.textContent = "Loading...";
+      fullEl.textContent = "Generating AI analysis...";
+      fullEl.classList.add("loading");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Analyzing...";
+
+      try {
+        const response = await fetch("https://hook.eu1.make.com/g7fv7kdxcvloc1l813v42vkzkec9cm5c", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            hook,
+            product,
+            channel
+          })
+        });
+
+        const text = await response.text();
+
+        statusEl.textContent = response.ok ? "Completed" : "Unexpected response";
+        fullEl.textContent = text || "No content returned.";
+
+      } catch (error) {
+        statusEl.textContent = "Error";
+        fullEl.textContent = "An error occurred while contacting the webhook.";
+        console.error(error);
+      } finally {
+        fullEl.classList.remove("loading");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Analyze My Hook";
+      }
     });
-
-    const text = await response.text();
-alert(text);
-    console.log(text);
-  } catch (error) {
-    alert("Erreur lors de l’envoi au webhook");
-    console.error(error);
-  }
-});
-</script>
+  </script>
 </body>
 </html>
